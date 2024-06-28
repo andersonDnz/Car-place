@@ -1,30 +1,37 @@
 "use client"
 
-import React from 'react'
-
-import { useState, Fragment } from 'react';
-import Image from 'next/image'
+import React, { useState, Fragment } from 'react';
+import Image from 'next/image';
 
 import {
   Combobox,
   ComboboxButton,
   ComboboxInput,
+  ComboboxOption,
   ComboboxOptions,
   Transition
-} from '@headlessui/react'
+} from '@headlessui/react';
 
-import { SearchManufacturerProps } from '@/types'
-
+import { manufacturers } from '@/constants';
+import { SearchManufacturerProps } from '@/types';
 
 
 const SearchManufacturer = ({ manufacturer, setManufacturer }: SearchManufacturerProps) => {
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState('');
 
+  const filteredManufacturers =
+    query === ""
+      ? manufacturers
+      : manufacturers.filter((item) => (
+        item.toLowerCase()
+          .replace(/\s+/g, "")
+          .includes(query.toLowerCase().replace(/\s+/g, ""))
+      ));
 
 
   return (
     <div className='search-manufacturer'>
-      <Combobox>
+      <Combobox value={manufacturer} onChange={setManufacturer}>
         <div className='relative w-full'>
           <ComboboxButton className="absolute top-[14px]">
             <Image
@@ -44,19 +51,36 @@ const SearchManufacturer = ({ manufacturer, setManufacturer }: SearchManufacture
 
           <Transition
             as={Fragment}
-            leave='trasition ease-in duration-100'
+            leave='transition ease-in duration-100'
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
             afterLeave={() => setQuery('')}
           >
             <ComboboxOptions>
-
+              {filteredManufacturers.length === 0 && query !== "" ? (
+                <ComboboxOption
+                  value={query}
+                  className="search-manufacturer__option"
+                >
+                  Create "{query}"
+                </ComboboxOption>
+              ) : (
+                filteredManufacturers.map((item) => (
+                  <ComboboxOption
+                    key={item}
+                    className="relative search-manufacturer__option"
+                    value={item}
+                  >
+                    {item}
+                  </ComboboxOption>
+                ))
+              )}
             </ComboboxOptions>
           </Transition>
         </div>
       </Combobox>
     </div>
-  )
+  );
 }
 
 export default SearchManufacturer;
