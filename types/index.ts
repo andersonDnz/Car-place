@@ -38,3 +38,13 @@ export interface FilterProps {
   limit: number;
   model: string;
 }
+
+export interface optionsProps {
+  title: string;
+  value: string;
+}
+
+export interface CustomFilterProps {
+  title: string;
+  options: optionsProps[];
+}
