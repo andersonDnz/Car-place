@@ -1,9 +1,9 @@
 'use client';
 
-import { Fragment, useState } from 'react'
+import { Fragment, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { Listbox, ListboxButton, Transition } from '@headlessui/react';
+import { Listbox, ListboxButton, ListboxOptions, ListboxOption, Transition } from '@headlessui/react';
 
 import { CustomFilterProps } from '@/types';
 
@@ -32,8 +32,23 @@ const CustomFilter = ({ title, options }: CustomFilterProps) => {
             as={Fragment}
             leave='transition ease-in duration-100'
             leaveFrom='opacity-100'
-            leaveTo='opacity-0'>
-
+            leaveTo='opacity-0'
+          >
+            <ListboxOptions className='custom-filter__options'>
+              {options.map((option) => (
+                <ListboxOption
+                  key={option.title}
+                  value={option}
+                  className={({ focus }) => `relative cursor-default select-none py-2 px-4 ${focus ? 'bg-primary-blue text-white' : 'text-gray-900'}`}
+                >
+                  {({ selected }) => (
+                    <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
+                      {option.title}
+                    </span>
+                  )}
+                </ListboxOption>
+              ))}
+            </ListboxOptions>
           </Transition>
         </div>
       </Listbox>
